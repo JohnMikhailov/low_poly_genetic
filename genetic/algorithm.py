@@ -20,10 +20,19 @@ class Algorithm:
 
     def start(self):
         self.generate_points()
+        best_image = []
+        best = 2_000_000_000
         for i in range(self.steps):
             self.draw_triangles()
-            print(fitness(self.image_in.getdata(), self.image_out.getdata()))
-            # self.mutate()
+            fit = fitness(self.image_in.getdata(), self.image_out.getdata())
+            if best > fit:
+                best = fit
+                if best_image:
+                    best_image.clear()
+                best_image.append(self.image_out)
+            print('last:', fit, 'best:', best)
+            self.mutate()
+        self.image_out = best_image[-1]
 
     def generate_points(self):
         self.points = [[0, 0], [0, self.height], [self.width, 0], [self.width, self.height]] +\
@@ -31,15 +40,11 @@ class Algorithm:
 
     def mutate(self):
         for point in self.points:
-            delta_x = rnd(-2, 2)
-            delta_y = rnd(-2, 2)
-            if point[0] + delta_x > self.width - 1:
-                point[0] -= delta_x
-            else:
-                point[1] += delta_x
-            if point[1] + delta_y > self.height - 1:
-                point[1] -= delta_y
-            else:
+            delta_x = rnd(-1, 1)
+            delta_y = rnd(-1, 1)
+            if 1 < point[0] + delta_x < self.width - 1:
+                point[0] += delta_x
+            if 1 < point[1] + delta_x < self.height - 1:
                 point[1] += delta_y
 
     def draw_triangles(self):
@@ -51,3 +56,6 @@ class Algorithm:
             fill = color([a, b, c], self.pixels)
             self.draw.polygon([a, b, c], fill=fill)
         self.image_out.paste(self.layer, mask=self.layer)
+
+    def show(self):
+        self.image_out.show()

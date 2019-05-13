@@ -70,7 +70,7 @@ def draw_triangles():
     pixels = saved.load()
     width, height = image.size
     # points_amount = int(0.03 * height * width)
-    points_amount = 5_000
+    points_amount = 1_000
     layer = Image.new('RGBA', (width, height))
     layer_draw = ImageDraw.Draw(layer)
     key_points = [(0, 0), (0, height), (width, 0), (width, height)]
@@ -80,7 +80,7 @@ def draw_triangles():
         a = tuple(points[i[0]])
         b = tuple(points[i[1]])
         c = tuple(points[i[2]])
-        fill = color(i, pixels)
+        fill = color([a, b, c], pixels)
         layer_draw.polygon([a, b, c], fill=fill)
     image.paste(layer, mask=layer)
     print(fitness(saved.getdata(), image.getdata()))
@@ -92,3 +92,9 @@ n = time.time()
 draw_triangles()
 t = time.time()
 print(t - n)
+
+# 1687828911
+# 400.9682638645172
+
+# 1331729999
+# 1145.8391151428223
