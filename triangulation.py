@@ -62,8 +62,8 @@ def fitness_(original, selected, points):
 
 
 def draw_triangles():
-    image = Image.open('tiger.jpg')
-    saved = Image.open('tiger.jpg')
+    image = Image.open('images/tiger.jpg')
+    saved = Image.open('images/tiger.jpg')
     # img = cv2.imread('tiger.jpg')
     # sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=5)
     # sobely = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=5)
@@ -76,12 +76,11 @@ def draw_triangles():
     key_points = [(0, 0), (0, height), (width, 0), (width, height)]
     points = key_points + [(rnd(0, width), rnd(0, height)) for _ in range(points_amount)]
     tri = Delaunay(points)
-    print(tri.simplices)
     for i in tri.simplices:
-        a = tuple(tri.points[i[0]])
-        b = tuple(tri.points[i[1]])
-        c = tuple(tri.points[i[2]])
-        fill = color([a, b, c], pixels)
+        a = tuple(points[i[0]])
+        b = tuple(points[i[1]])
+        c = tuple(points[i[2]])
+        fill = color(i, pixels)
         layer_draw.polygon([a, b, c], fill=fill)
     image.paste(layer, mask=layer)
     print(fitness(saved.getdata(), image.getdata()))
