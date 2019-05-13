@@ -7,7 +7,7 @@ from genetic.fitness import fitness
 
 class Algorithm:
 
-    def __init__(self, input_path, output_path='', points_amount=1000, steps=500):
+    def __init__(self, input_path, points_amount=1000, steps=500):
         self.image_in = Image.open(input_path)  # input image
         self.image_out = Image.open(input_path)  # image that will be processed
         self.pixels = self.image_in.load()
