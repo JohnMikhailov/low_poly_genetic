@@ -21,7 +21,16 @@ class Algorithm:
     def start(self):
         self.generate_points()
         for i in range(self.steps):
-            self.draw_triangles()
+            pass
+
+    def mutate(self):
+        for point in self.points:
+            delta_x = rnd(-1, 1)
+            delta_y = rnd(-1, 1)
+            if 1 < point[0] < self.width:
+                point[0] += delta_x
+            if 1 < point[1] < self.height:
+                point[1] += delta_y
 
     def generate_points(self):
         self.points = [[0, 0], [0, self.height], [self.width, 0], [self.width, self.height]] +\
