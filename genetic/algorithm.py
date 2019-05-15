@@ -44,7 +44,7 @@ class Algorithm:
             delta_y = rnd(-1, 1)
             if 1 < point[0] + delta_x < self.width - 1:
                 point[0] += delta_x
-            if 1 < point[1] + delta_x < self.height - 1:
+            if 1 < point[1] + delta_y < self.height - 1:
                 point[1] += delta_y
 
     def draw_triangles(self):
