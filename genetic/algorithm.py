@@ -40,8 +40,8 @@ class Algorithm:
 
     def mutate(self):
         for point in self.points:
-            delta_x = rnd(-1, 1)
-            delta_y = rnd(-1, 1)
+            delta_x = [-1, 1][rnd(-1, 1)]
+            delta_y = [-1, 1][rnd(-1, 1)]
             if 1 < point[0] + delta_x < self.width - 1:
                 point[0] += delta_x
             if 1 < point[1] + delta_y < self.height - 1:
