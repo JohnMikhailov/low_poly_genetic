@@ -27,9 +27,9 @@ class Algorithm:
         for point in self.points:
             delta_x = rnd(-1, 1)
             delta_y = rnd(-1, 1)
-            if 1 < point[0] < self.width:
+            if 1 < point[0] < self.width - 1:
                 point[0] += delta_x
-            if 1 < point[1] < self.height:
+            if 1 < point[1] < self.height - 1:
                 point[1] += delta_y
 
     def generate_points(self):
@@ -45,3 +45,6 @@ class Algorithm:
             fill = color([a, b, c], self.pixels)
             self.draw.polygon([a, b, c], fill=fill)
         self.image_out.paste(self.layer, mask=self.layer)
+
+    def show(self):
+        self.image_out.show()
