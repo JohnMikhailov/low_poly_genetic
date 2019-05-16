@@ -7,6 +7,7 @@ from scipy.spatial import Delaunay
 from collections import defaultdict
 import cv2
 import time
+import genetic.coloring
 
 
 # def color_(polygon, pixels):
@@ -62,25 +63,24 @@ def fitness_(original, selected, points):
 
 
 def draw_triangles():
-    image = Image.open('tiger.jpg')
-    saved = Image.open('tiger.jpg')
+    image = Image.open('images/tiger.jpg')
+    saved = Image.open('images/tiger.jpg')
     # img = cv2.imread('tiger.jpg')
     # sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=5)
     # sobely = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=5)
     pixels = saved.load()
     width, height = image.size
     # points_amount = int(0.03 * height * width)
-    points_amount = 5_000
+    points_amount = 100_000
     layer = Image.new('RGBA', (width, height))
     layer_draw = ImageDraw.Draw(layer)
     key_points = [(0, 0), (0, height), (width, 0), (width, height)]
     points = key_points + [(rnd(0, width), rnd(0, height)) for _ in range(points_amount)]
     tri = Delaunay(points)
-    print(tri.simplices)
     for i in tri.simplices:
-        a = tuple(tri.points[i[0]])
-        b = tuple(tri.points[i[1]])
-        c = tuple(tri.points[i[2]])
+        a = tuple(points[i[0]])
+        b = tuple(points[i[1]])
+        c = tuple(points[i[2]])
         fill = color([a, b, c], pixels)
         layer_draw.polygon([a, b, c], fill=fill)
     image.paste(layer, mask=layer)
@@ -93,3 +93,19 @@ n = time.time()
 draw_triangles()
 t = time.time()
 print(t - n)
+
+# 1687828911
+# 400.9682638645172
+
+# 1331729999
+# 1145.8391151428223
+
+'''
+ зависимости
+ 
+ время работы от числа итераций ГА
+ времени работы от числа точек триангуляции
+ значение фитнес функции от числа точек триангуляции
+ значение фитнес функции от числа итераций ГА - проследить изменения
+ 
+'''
