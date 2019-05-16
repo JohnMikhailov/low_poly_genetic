@@ -10,15 +10,6 @@ import time
 import genetic.coloring
 
 
-# def color_(polygon, pixels):
-#     x = (int(polygon[0][0]), int(polygon[1][0]), int(polygon[2][0]))
-#     y = (int(polygon[0][1]), int(polygon[1][1]), int(polygon[2][1]))
-#     xmax = max(x)
-#     xmin = min(x)
-#     ymax = max(y)
-#     ymin = min(y)
-
-
 def color(polygon, pixels):
     tri = mp.Path(np.array(polygon))
     x = [int(polygon[point][0]) for point in range(len(polygon))]
@@ -71,7 +62,7 @@ def draw_triangles():
     pixels = saved.load()
     width, height = image.size
     # points_amount = int(0.03 * height * width)
-    points_amount = 100_000
+    points_amount = 1_000
     layer = Image.new('RGBA', (width, height))
     layer_draw = ImageDraw.Draw(layer)
     key_points = [(0, 0), (0, height), (width, 0), (width, height)]

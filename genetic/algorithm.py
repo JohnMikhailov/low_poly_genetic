@@ -50,11 +50,8 @@ class Algorithm:
     def draw_triangles(self):
         tri = Delaunay(self.points)
         for i in tri.simplices:
-            a = tuple(self.points[i[0]])
-            b = tuple(self.points[i[1]])
-            c = tuple(self.points[i[2]])
-            fill = color([a, b, c], self.pixels)
-            self.draw.polygon([a, b, c], fill=fill)
+            poly = [tuple(self.points[i[j]]) for j in (0, 1, 2)]
+            self.draw.polygon(poly, fill=color(poly, self.pixels))
         self.image_out.paste(self.layer, mask=self.layer)
 
     def show(self):
