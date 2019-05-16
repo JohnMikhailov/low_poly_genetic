@@ -16,15 +16,15 @@ def color(polygon, pixels):
     ymax = max(y)
     ymin = min(y)
     color_count = defaultdict(int)
-    max_color_value = 0
-    max_color = None
     for i in range(xmin, xmax, 1):
         for j in range(ymin, ymax, 1):
             if tri.contains_point((i, j)):
-                cur_count = color_count[pixels[i, j]]
-                cur_color = pixels[i, j]
-                if max_color_value < cur_count:
-                    max_color_value = cur_count
-                    max_color = cur_color
-                color_count[cur_color] += 1
-    return max_color
+                color_count[pixels[i, j]] += 1
+    max_color = max(color_count.values() or [0])
+    fill_color = None if max_color > 0 else pixels[xmax - 1, ymax - 1]
+    # fill_color = None
+    for key in color_count:
+        fill_color = key
+        if color_count[key] == max_color:
+            return key
+    return fill_color

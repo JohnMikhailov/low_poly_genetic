@@ -7,6 +7,7 @@ from scipy.spatial import Delaunay
 from collections import defaultdict
 import cv2
 import time
+import genetic.coloring
 
 
 # def color_(polygon, pixels):
