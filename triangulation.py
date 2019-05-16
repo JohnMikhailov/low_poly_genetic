@@ -71,7 +71,7 @@ def draw_triangles():
     pixels = saved.load()
     width, height = image.size
     # points_amount = int(0.03 * height * width)
-    points_amount = 1_000
+    points_amount = 100_000
     layer = Image.new('RGBA', (width, height))
     layer_draw = ImageDraw.Draw(layer)
     key_points = [(0, 0), (0, height), (width, 0), (width, height)]
@@ -99,3 +99,13 @@ print(t - n)
 
 # 1331729999
 # 1145.8391151428223
+
+'''
+ зависимости
+ 
+ время работы от числа итераций ГА
+ времени работы от числа точек триангуляции
+ значение фитнес функции от числа точек триангуляции
+ значение фитнес функции от числа итераций ГА - проследить изменения
+ 
+'''
