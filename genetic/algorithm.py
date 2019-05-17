@@ -20,7 +20,6 @@ class Algorithm:
         self.fit_val = None
 
     def start(self, iters=None):
-        fitvals_iters = {}
         if iters:
             self.steps = iters
         self.generate_points()
@@ -35,10 +34,9 @@ class Algorithm:
                     best_image.clear()
                 best_image.append(self.image_out)
             print('last:', fit, 'best:', best)
-            fitvals_iters[i] = best
             self.mutate()
+        self.fit_val = best
         self.image_out = best_image[-1]
-        return fitvals_iters
 
     def generate_points(self):
         self.points = [[0, 0], [0, self.height], [self.width, 0], [self.width, self.height]] +\

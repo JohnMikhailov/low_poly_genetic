@@ -1,3 +1,6 @@
+import math
+
+
 def fitness(original, selected):
     fit = 0
     for i in range(len(original)):
@@ -5,7 +8,7 @@ def fitness(original, selected):
         g = original[i][1] - selected[i][1]
         b = original[i][2] - selected[i][2]
         fit += r*r + g*g + b*b
-    return fit
+    return math.sqrt(fit)
 
 
 def fitness_selected(original, selected, points):
