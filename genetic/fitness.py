@@ -18,5 +18,4 @@ def fitness_selected(original, selected, points):
         g = original[points[i][0]][points[i][1]][1] - selected[points[i][0]][points[i][1]][1]
         b = original[points[i][0]][points[i][1]][2] - selected[points[i][0]][points[i][1]][2]
         fit += r*r + b*b + g*g
-    return fit
-
+    return math.sqrt(fit)
