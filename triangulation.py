@@ -4,6 +4,7 @@ from PIL import Image, ImageDraw
 import numpy as np
 import matplotlib.path as mp
 from scipy.spatial import Delaunay
+from scipy import ndimage
 from collections import defaultdict
 import cv2
 import time
@@ -56,11 +57,16 @@ def fitness_(original, selected, points):
 def draw_triangles():
     image = Image.open('images/tiger.jpg')
     saved = Image.open('images/tiger.jpg')
-    # img = cv2.imread('tiger.jpg')
-    # sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=5)
-    # sobely = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=5)
-    pixels = saved.load()
+
+    # im = np.array(Image.open('images/tiger.jpg').convert('L'))
+    # saved = Image.fromarray(ndimage.gaussian_filter(image, sigma=4))
+    # imx = np.zeros(im.shape)
+    # imy = np.zeros(im.shape)
+    # filters.sobel(im, 1, imx)
+    # filters.sobel(im, 0, imy)
+
     width, height = image.size
+    pixels = saved.load()
     # points_amount = int(0.03 * height * width)
     points_amount = 1_000
     layer = Image.new('RGBA', (width, height))
@@ -77,7 +83,7 @@ def draw_triangles():
     image.paste(layer, mask=layer)
     print(fitness(saved.getdata(), image.getdata()))
     image.show()
-    saved.show()
+    # saved.show()
 
 
 n = time.time()
