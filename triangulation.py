@@ -1,6 +1,6 @@
 import random
 from random import randint as rnd
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 import numpy as np
 import matplotlib.path as mp
 from scipy.spatial import Delaunay
@@ -54,19 +54,28 @@ def fitness_(original, selected, points):
     return fit
 
 
-def draw_triangles():
-    image = Image.open('images/tiger.jpg')
-    saved = Image.open('images/tiger.jpg')
+def edges_points(edges):
+    xy = []
+    left = []
+    h, w = edges.shape
+    print(h, w)
+    for i in range(h):
+        for j in range(w):
+            if edges[i, j] > 0:
+                xy.append((j, i))
+            else:
+                left.append((j, i))
+    return xy, left
+
+
+def draw_triangles(inp, image, saved, points_amount=0):
     width, height = image.size
     pixels = saved.load()
-    # points_amount = int(0.03 * height * width)
-    im = cv2.imread('images/tiger.jpg')
-    edges = cv2.Canny(im, 100, 200)
-    points_amount = 1_000
     layer = Image.new('RGBA', (width, height))
     layer_draw = ImageDraw.Draw(layer)
     key_points = [(0, 0), (0, height), (width, 0), (width, height)]
-    points = key_points + [(rnd(0, width), rnd(0, height)) for _ in range(points_amount)]
+    # points = key_points + [(rnd(0, width), rnd(0, height)) for _ in range(points_amount)]
+    points = inp
     tri = Delaunay(points)
     for i in tri.simplices:
         a = tuple(points[i[0]])
@@ -75,28 +84,23 @@ def draw_triangles():
         fill = color([a, b, c], pixels)
         layer_draw.polygon([a, b, c], fill=fill)
     image.paste(layer, mask=layer)
-    print(fitness(saved.getdata(), image.getdata()))
     image.show()
     # saved.show()
 
 
-n = time.time()
-draw_triangles()
-t = time.time()
-print(t - n)
+image = Image.open('images/tiger.jpg')
+image.convert('1').show()
+# edges = image.filter(ImageFilter.EDGE_ENHANCE)
+edges = image.filter(ImageFilter.FIND_EDGES).convert('1')
+edges.show()
+r = edges.load()
+h, w = image.size
+l = []
+for i in range(h):
+    for j in range(w):
+        if r[i, j] != 0:
+            l.append((i, j))
+print(len(l))
+saved = Image.open('images/tiger.jpg')
+# draw_triangles(random.sample(l, len(l)//5), image, saved)
 
-# 1687828911
-# 400.9682638645172
-
-# 1331729999
-# 1145.8391151428223
-
-'''
- зависимости
- 
- время работы от числа итераций ГА
- времени работы от числа точек триангуляции
- значение фитнес функции от числа точек триангуляции
- значение фитнес функции от числа итераций ГА - проследить изменения
- 
-'''
