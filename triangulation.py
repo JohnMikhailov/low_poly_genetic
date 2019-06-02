@@ -88,10 +88,14 @@ def draw_triangles(inp, image, saved, points_amount=0):
     # saved.show()
 
 
-image = Image.open('images/tiger.jpg')
-image.convert('1').show()
-# edges = image.filter(ImageFilter.EDGE_ENHANCE)
-edges = image.filter(ImageFilter.FIND_EDGES).convert('1')
+imp = 'images/tiger.jpg'
+image = Image.open(imp)
+# edges = image.filter(ImageFilter.BLUR)
+# edges = edges.filter(ImageFilter.EDGE_ENHANCE)
+# image.filter(ImageFilter.DETAIL).show()
+edgesC = cv2.Canny(cv2.imread(imp), 100, 200)
+Image.fromarray(edgesC).show()
+edges = image.filter(ImageFilter.EDGE_ENHANCE).filter(ImageFilter.FIND_EDGES).convert('1')
 edges.show()
 r = edges.load()
 h, w = image.size
@@ -101,6 +105,16 @@ for i in range(h):
         if r[i, j] != 0:
             l.append((i, j))
 print(len(l))
-saved = Image.open('images/tiger.jpg')
+saved = Image.open(imp)
 # draw_triangles(random.sample(l, len(l)//5), image, saved)
+# draw_triangles(l, image, saved)
+
+
+# im1 = cv2.imread('images/tiger.jpg')
+#
+# im2 = cv2.imread('images/tiger.jpg')
+
+# for i in range(500):
+#     print(np.sum((im2 - im1)**2))
+
 
