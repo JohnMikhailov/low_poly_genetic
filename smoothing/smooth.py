@@ -11,7 +11,7 @@ class Smooth:
         self.pop_size = pop_size
         self.threshold = threshold
         self.fit = fit
-        # self.kernel_size = kernel_size
+        self.kernel_size = kernel_size
         self.population = None
         self.kernel = None
 
@@ -39,11 +39,21 @@ class Smooth:
             if 1 < point['pos'][1] + delta_y < self.h - 5:
                 point['pos'][1] += delta_y
 
-    def mutate(self, p):
+    def mutate_1(self, p):
         if p['fit'] > self.threshold[1]:
             self.binary[p['pos'][0], p['pos'][1]] = 0
         elif p['fit'] < self.threshold[0]:
             self.binary[p['pos'][0], p['pos'][1]] = 255
+
+    def mutate_n(self, n: int):
+        pass
+
+    def get_kernel(self):
+        i_range = range(-(self.kernel_size//2), self.kernel_size//2 + 1)
+        j_range = list(range(-(self.kernel_size**2//2), (self.kernel_size**2)//2 + 1))
+        for num, i in enumerate(i_range):
+            for j in j_range[:self.kernel_size:self.kernel_size]:
+                pass
 
     def start(self, steps):
         self.generate_population()
@@ -55,7 +65,7 @@ class Smooth:
                            (x, y - 1), (x, y), (x, y + 1),
                            (x + 1, y + 2), (x + 1, y + 3), (x + 1, y + 4)]
                 p['fit'] = self.density()
-                self.mutate(p)
+                self.mutate_1(p)
             fit = self.fitness()
             print('step:', step, 'fitness:', fit)
             # if fit >= self.fit:
