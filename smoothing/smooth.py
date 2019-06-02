@@ -48,12 +48,14 @@ class Smooth:
     def mutate_n(self, n: int):
         pass
 
-    def get_kernel(self):
+    def get_kernel_deltas(self):
         i_range = range(-(self.kernel_size//2), self.kernel_size//2 + 1)
         j_range = list(range(-(self.kernel_size**2//2), (self.kernel_size**2)//2 + 1))
+        deltas = []
         for num, i in enumerate(i_range):
-            for j in j_range[:self.kernel_size:self.kernel_size]:
-                pass
+            for j in j_range[num * self.kernel_size:(num + 1) * self.kernel_size]:
+                deltas.append((i, j))
+        return deltas
 
     def start(self, steps):
         self.generate_population()
@@ -61,9 +63,7 @@ class Smooth:
             for p in self.population:
                 x = p['pos'][0]
                 y = p['pos'][1]
-                self.kernel = [(x - 1, y - 4), (x - 1, y - 3), (x - 1, y - 2),
-                           (x, y - 1), (x, y), (x, y + 1),
-                           (x + 1, y + 2), (x + 1, y + 3), (x + 1, y + 4)]
+                self.kernel = [(x + i, y + j) for i, j in self.get_kernel_deltas()]
                 p['fit'] = self.density()
                 self.mutate_1(p)
             fit = self.fitness()

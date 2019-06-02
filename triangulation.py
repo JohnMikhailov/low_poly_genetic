@@ -113,7 +113,7 @@ l = np.array(l)
 # draw_triangles(random.sample(l, len(l)//5), image, saved)
 
 
-s = Smooth(l, 1000, (0, 0.1), fit=0.3)
+s = Smooth(l, 1000, (0, 0.1), fit=0.3, kernel_size=5)
 s.start(100)
 r = s.get_binary()
 
