@@ -9,6 +9,7 @@ from collections import defaultdict
 import cv2
 import time
 import genetic.coloring
+from smoothing.smooth import Smooth
 
 
 def color(polygon, pixels):
@@ -88,33 +89,38 @@ def draw_triangles(inp, image, saved, points_amount=0):
     # saved.show()
 
 
-imp = 'images/tiger.jpg'
+imp = 'images/me.jpg'
 image = Image.open(imp)
 # edges = image.filter(ImageFilter.BLUR)
 # edges = edges.filter(ImageFilter.EDGE_ENHANCE)
 # image.filter(ImageFilter.DETAIL).show()
 edgesC = cv2.Canny(cv2.imread(imp), 100, 200)
-Image.fromarray(edgesC).show()
-edges = image.filter(ImageFilter.EDGE_ENHANCE).filter(ImageFilter.FIND_EDGES).convert('1')
+print(type(edgesC))
+# Image.fromarray(edgesC).show()
+edges = image.filter(ImageFilter.FIND_EDGES).convert('1')
 edges.show()
 r = edges.load()
+# r = edgesC
 h, w = image.size
 l = []
 for i in range(h):
+    tmp = []
     for j in range(w):
-        if r[i, j] != 0:
-            l.append((i, j))
-print(len(l))
+        tmp.append(r[i, j])
+    l.append(tmp)
 saved = Image.open(imp)
+l = np.array(l)
 # draw_triangles(random.sample(l, len(l)//5), image, saved)
-# draw_triangles(l, image, saved)
 
 
-# im1 = cv2.imread('images/tiger.jpg')
-#
-# im2 = cv2.imread('images/tiger.jpg')
+s = Smooth(l, 1000, (0, 0.1), fit=0.3)
+s.start(100)
+r = s.get_binary()
 
-# for i in range(500):
-#     print(np.sum((im2 - im1)**2))
+n = []
+for i in range(h):
+    for j in range(w):
+        if r[i, j] > 0:
+            n.append((i, j))
 
-
+draw_triangles(n, image, saved)
