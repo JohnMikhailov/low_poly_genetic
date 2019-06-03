@@ -13,7 +13,7 @@ from smoothing.smooth import Smooth
 
 
 def color(polygon, pixels):
-    tri = mp.Path(np.array(polygon))
+    # tri = mp.Path(np.array(polygon))
     x = [int(polygon[point][0]) for point in range(len(polygon))]
     y = [int(polygon[point][1]) for point in range(len(polygon))]
     xmax = max(x)
@@ -23,11 +23,11 @@ def color(polygon, pixels):
     color_count = defaultdict(int)
     for i in range(xmin, xmax, 1):
         for j in range(ymin, ymax, 1):
-            if tri.contains_point((i, j)):
-                color_count[pixels[i, j]] += 1
+            # if tri.contains_point((i, j)):
+            color_count[pixels[i, j]] += 1
     max_color = max(color_count.values() or [0])
-    fill_color = None if max_color > 0 else pixels[xmax - 1, ymax - 1]
-    # fill_color = None
+    # fill_color = None if max_color > 0 else pixels[xmax - 1, ymax - 1]
+    fill_color = None
     for key in color_count:
         fill_color = key
         if color_count[key] == max_color:
@@ -85,20 +85,21 @@ def draw_triangles(inp, image, saved, points_amount=0):
         fill = color([a, b, c], pixels)
         layer_draw.polygon([a, b, c], fill=fill)
     image.paste(layer, mask=layer)
+    # image = image.filter(ImageFilter.DETAIL)
     image.show()
     # saved.show()
 
 
 imp = 'images/me.jpg'
 image = Image.open(imp)
+image.show()
 # edges = image.filter(ImageFilter.BLUR)
 # edges = edges.filter(ImageFilter.EDGE_ENHANCE)
 # image.filter(ImageFilter.DETAIL).show()
-edgesC = cv2.Canny(cv2.imread(imp), 100, 200)
-print(type(edgesC))
+# edgesC = cv2.Canny(cv2.imread(imp), 100, 200)
 # Image.fromarray(edgesC).show()
-edges = image.filter(ImageFilter.FIND_EDGES).convert('1')
-edges.show()
+edges = image.filter(ImageFilter.GaussianBlur(radius=5)).filter(ImageFilter.FIND_EDGES).convert('1')
+edges.show(title='abcd')
 r = edges.load()
 # r = edgesC
 h, w = image.size
@@ -113,7 +114,7 @@ l = np.array(l)
 # draw_triangles(random.sample(l, len(l)//5), image, saved)
 
 
-s = Smooth(l, 1000, (0, 0.1), fit=0.3, kernel_size=5)
+s = Smooth(l, 500, (0.2, 0.8), fit=0.5, kernel_size=11)
 s.start(100)
 r = s.get_binary()
 
@@ -124,3 +125,4 @@ for i in range(h):
             n.append((i, j))
 
 draw_triangles(n, image, saved)
+

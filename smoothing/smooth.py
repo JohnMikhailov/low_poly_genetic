@@ -1,5 +1,5 @@
 import numpy as np
-from random import randint as rnd
+from random import randint as rnd, sample, choice
 from PIL import Image
 
 
@@ -16,66 +16,69 @@ class Smooth:
         self.kernel = None
 
     def generate_population(self):
-        self.population = [{'pos': [rnd(4, self.w-5), rnd(4, self.h-5)], 'fit': 0} for _ in range(self.pop_size)]
+        self.population = [{'pos': [rnd(0, self.w),
+                                    rnd(0, self.h)], 'density': 0}
+                           for _ in range(self.pop_size)]
+        # self.population = [{'pos': [i, j], 'density': 0} for i in range(self.w) for j in range(self.h)]
 
     def density(self):
-        values = np.array([self.binary[index] for index in self.kernel])
+        values = np.array([self.binary[index] for index in self.kernel if index[0] < self.w and index[1] < self.h])
         white_amount = values[values == 255].size
         return round(white_amount/9, 2)
 
     def fitness(self):
         fitted = 0
         for p in self.population:
-            if self.threshold[0] <= p['fit'] <= self.threshold[1]:
+            x, y = p['pos']
+            self.kernel = self.get_kernel(x, y)
+            if self.threshold[0] < self.density() < self.threshold[1]:
                 fitted += 1
         return round(fitted/len(self.population), 2)
 
     def migrate(self):  # сделать так, чтобы мигрировала только часть - использовать формулы
         for point in self.population:
-            delta_x = [-1, 1][rnd(0, 1)]
-            delta_y = [-1, 1][rnd(0, 1)]
-            if 1 < point['pos'][0] + delta_x < self.w - 5:
-                point['pos'][0] += delta_x
-            if 1 < point['pos'][1] + delta_y < self.h - 5:
-                point['pos'][1] += delta_y
+            if not (self.threshold[0] < point['density'] < self.threshold[1]):
+                point['pos'].clear()
+                point['pos'] += [rnd(0, self.w), rnd(0, self.h)]
 
-    def mutate_1(self, p):
-        if p['fit'] > self.threshold[1]:
-            self.binary[p['pos'][0], p['pos'][1]] = 0
-        elif p['fit'] < self.threshold[0]:
-            self.binary[p['pos'][0], p['pos'][1]] = 255
+    def mutate_all(self, p):
+        if p['density'] > self.threshold[1]:
+            for i, j in self.kernel:
+                self.binary[i, j] = 0
+        if p['density'] < self.threshold[0]:
+            for i, j in [choice(self.kernel)]:
+                self.binary[i, j] = 255
 
-    def mutate_n(self, n: int):
-        pass
-
-    def get_kernel_deltas(self):
+    def get_kernel(self, x, y):
         i_range = range(-(self.kernel_size//2), self.kernel_size//2 + 1)
         j_range = list(range(-(self.kernel_size**2//2), (self.kernel_size**2)//2 + 1))
         deltas = []
         for num, i in enumerate(i_range):
             for j in j_range[num * self.kernel_size:(num + 1) * self.kernel_size]:
                 deltas.append((i, j))
-        return deltas
+        return [(x + i, y + j) for i, j in deltas if x + i < self.w and y + j < self.h]
 
-    def start(self, steps):
+    def start(self, steps=1):
         self.generate_population()
+        if self.fitness() >= self.fit:
+            return
         for step in range(steps):
             for p in self.population:
                 x = p['pos'][0]
                 y = p['pos'][1]
-                self.kernel = [(x + i, y + j) for i, j in self.get_kernel_deltas()]
-                p['fit'] = self.density()
-                self.mutate_1(p)
+                self.kernel = self.get_kernel(x, y)
+                p['density'] = self.density()
+                self.mutate_all(p)
             fit = self.fitness()
             print('step:', step, 'fitness:', fit)
-            # if fit >= self.fit:
-            #     return
-            del self.population
-            self.generate_population()
-            # self.migrate()
+            if fit >= self.fit:
+                return
+            self.migrate()
 
-    def get_image(self):
-        return Image.fromarray(self.binary)
+    # def get_image(self):
+    #     Image.fromarray(self.binary).show()
 
     def get_binary(self):
+        for i, j in [(0, 0), (0, self.h - 1), (self.w - 1, 0), (self.w - 1, self.h - 1)]:
+            self.binary[i, j] = 255
         return self.binary
