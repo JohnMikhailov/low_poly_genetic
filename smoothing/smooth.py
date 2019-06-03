@@ -19,7 +19,6 @@ class Smooth:
         self.population = [{'pos': [rnd(0, self.w),
                                     rnd(0, self.h)], 'density': 0}
                            for _ in range(self.pop_size)]
-        # self.population = [{'pos': [i, j], 'density': 0} for i in range(self.w) for j in range(self.h)]
 
     def density(self):
         values = np.array([self.binary[index] for index in self.kernel if index[0] < self.w and index[1] < self.h])
@@ -35,7 +34,7 @@ class Smooth:
                 fitted += 1
         return round(fitted/len(self.population), 2)
 
-    def migrate(self):  # сделать так, чтобы мигрировала только часть - использовать формулы
+    def migrate(self):
         for point in self.population:
             if not (self.threshold[0] < point['density'] < self.threshold[1]):
                 point['pos'].clear()
@@ -46,7 +45,7 @@ class Smooth:
             for i, j in self.kernel:
                 self.binary[i, j] = 0
         if p['density'] < self.threshold[0]:
-            for i, j in [choice(self.kernel)]:
+            for i, j in [choice(self.kernel + [(0, 0)])]:
                 self.binary[i, j] = 255
 
     def get_kernel(self, x, y):
@@ -75,10 +74,7 @@ class Smooth:
                 return
             self.migrate()
 
-    # def get_image(self):
-    #     Image.fromarray(self.binary).show()
-
     def get_binary(self):
-        for i, j in [(0, 0), (0, self.h - 1), (self.w - 1, 0), (self.w - 1, self.h - 1)]:
-            self.binary[i, j] = 255
+        # for i, j in [(0, 0), (0, self.h - 1), (self.w - 1, 0), (self.w - 1, self.h - 1)]:
+        #     self.binary[i, j] = 255
         return self.binary

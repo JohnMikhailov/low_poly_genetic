@@ -24,7 +24,7 @@ def color(polygon, pixels):
     for i in range(xmin, xmax, 1):
         for j in range(ymin, ymax, 1):
             # if tri.contains_point((i, j)):
-            color_count[pixels[i, j]] += 1
+            color_count[pixels[j, i]] += 1
     max_color = max(color_count.values() or [0])
     # fill_color = None if max_color > 0 else pixels[xmax - 1, ymax - 1]
     fill_color = None
@@ -33,40 +33,6 @@ def color(polygon, pixels):
         if color_count[key] == max_color:
             return key
     return fill_color
-
-
-def fitness(original, selected):
-    fit = 0
-    for i in range(len(original)):
-        r = original[i][0] - selected[i][0]
-        g = original[i][1] - selected[i][1]
-        b = original[i][2] - selected[i][2]
-        fit += r*r + g*g + b*b
-    return fit
-
-
-def fitness_(original, selected, points):
-    fit = 0
-    for i in range(len(points)):
-        r = original[points[i][0]][points[i][1]][0] - selected[points[i][0]][points[i][1]][0]
-        g = original[points[i][0]][points[i][1]][1] - selected[points[i][0]][points[i][1]][1]
-        b = original[points[i][0]][points[i][1]][2] - selected[points[i][0]][points[i][1]][2]
-        fit += r*r + b*b + g*g
-    return fit
-
-
-def edges_points(edges):
-    xy = []
-    left = []
-    h, w = edges.shape
-    print(h, w)
-    for i in range(h):
-        for j in range(w):
-            if edges[i, j] > 0:
-                xy.append((j, i))
-            else:
-                left.append((j, i))
-    return xy, left
 
 
 def draw_triangles(inp, image, saved, points_amount=0):
@@ -92,37 +58,22 @@ def draw_triangles(inp, image, saved, points_amount=0):
 
 imp = 'images/me.jpg'
 image = Image.open(imp)
-image.show()
-# edges = image.filter(ImageFilter.BLUR)
-# edges = edges.filter(ImageFilter.EDGE_ENHANCE)
-# image.filter(ImageFilter.DETAIL).show()
-# edgesC = cv2.Canny(cv2.imread(imp), 100, 200)
-# Image.fromarray(edgesC).show()
-edges = image.filter(ImageFilter.GaussianBlur(radius=5)).filter(ImageFilter.FIND_EDGES).convert('1')
-edges.show(title='abcd')
-r = edges.load()
-# r = edgesC
-h, w = image.size
-l = []
-for i in range(h):
-    tmp = []
-    for j in range(w):
-        tmp.append(r[i, j])
-    l.append(tmp)
-saved = Image.open(imp)
-l = np.array(l)
-# draw_triangles(random.sample(l, len(l)//5), image, saved)
+# image.show()
 
+edges = cv2.Canny(cv2.imread(imp), 100, 200)
+# Image.fromarray(edges).show()
 
-s = Smooth(l, 500, (0.2, 0.8), fit=0.5, kernel_size=11)
+s = Smooth(edges, 1000, (0.1, 0.5), fit=1, kernel_size=7)
 s.start(100)
 r = s.get_binary()
 
+w, h = r.shape
 n = []
-for i in range(h):
-    for j in range(w):
+for i in range(w):
+    for j in range(h):
         if r[i, j] > 0:
             n.append((i, j))
 
+saved = Image.open(imp)
 draw_triangles(n, image, saved)
 
