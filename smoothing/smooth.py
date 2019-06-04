@@ -37,15 +37,14 @@ class Smooth:
     def migrate(self):
         for point in self.population:
             if not (self.threshold[0] < point['density'] < self.threshold[1]):
-                point['pos'].clear()
-                point['pos'] += [rnd(0, self.w), rnd(0, self.h)]
+                point['pos'] = [rnd(0, self.w), rnd(0, self.h)]
 
     def mutate_all(self, p):
         if p['density'] > self.threshold[1]:
             for i, j in self.kernel:
                 self.binary[i, j] = 0
         if p['density'] < self.threshold[0]:
-            for i, j in [choice(self.kernel + [(0, 0)])]:
+            for i, j in [choice(self.kernel)]:
                 self.binary[i, j] = 255
 
     def get_kernel(self, x, y):
