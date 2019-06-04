@@ -54,20 +54,15 @@ def draw_triangles(inp, image, saved, points_amount=0):
     image.show()
 
 
-imp = 'images/karen_c.jpg'
+imp = 'images/paris.jpg'
 image = Image.open(imp)
 im = cv2.imread(imp)
 
-# high_thresh, thresh_im = cv2.threshold(im, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-# lowThresh = 0.5*high_thresh
 edges = cv2.Canny(im, 100, 200)
-# Image.fromarray(edges).show()
+Image.fromarray(edges).show()
 
-# edges = image.filter(ImageFilter.GaussianBlur(radius=3)).filter(ImageFilter.FIND_EDGES).convert('1')
-# edges.show()
-# edges = np.array(edges)
 
-s = Smooth(edges, 500, (0.4, 0.8), fit=0.5, kernel_size=5)
+s = Smooth(edges, 5000, (0.1, 0.5), fit=0.5, radius=5)
 s.start(10)
 r = s.get_binary()
 

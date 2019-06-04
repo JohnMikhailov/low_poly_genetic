@@ -1,17 +1,18 @@
 import numpy as np
 from random import randint as rnd, sample, choice
 from PIL import Image
+import itertools
 
 
 class Smooth:
 
-    def __init__(self, binary, pop_size, threshold=(0.2, 0.5), fit=0.5, kernel_size=3):
+    def __init__(self, binary, pop_size, threshold=(0.2, 0.5), fit=0.5, radius=2):
         self.binary = binary
         self.w, self.h = self.binary.shape
         self.pop_size = pop_size
         self.threshold = threshold
         self.fit = fit
-        self.kernel_size = kernel_size
+        self.kernel_size = radius
         self.population = None
         self.kernel = None
 
@@ -29,7 +30,7 @@ class Smooth:
         fitted = 0
         for p in self.population:
             x, y = p['pos']
-            self.kernel = self.get_kernel(x, y)
+            self.set_kernel(x, y)
             if self.threshold[0] < self.density() < self.threshold[1]:
                 fitted += 1
         return round(fitted/len(self.population), 2)
@@ -47,14 +48,14 @@ class Smooth:
             for i, j in [choice(self.kernel)]:
                 self.binary[i, j] = 255
 
-    def get_kernel(self, x, y):
-        i_range = range(-(self.kernel_size//2), self.kernel_size//2 + 1)
-        j_range = list(range(-(self.kernel_size**2//2), (self.kernel_size**2)//2 + 1))
-        deltas = []
-        for num, i in enumerate(i_range):
-            for j in j_range[num * self.kernel_size:(num + 1) * self.kernel_size]:
-                deltas.append((i, j))
-        return [(x + i, y + j) for i, j in deltas if x + i < self.w and y + j < self.h]
+    def set_kernel(self, x, y):
+        radius = self.kernel_size
+        _x, _y = [x], [y]
+        for i in range(1, radius + 1):
+            _x += [x - i, x + i]
+            _y += [y - i, y + i]
+        ker = itertools.product(_x, _y)
+        self.kernel = [(i, j) for i, j in ker if i < self.w and j < self.h]
 
     def start(self, steps=1):
         self.generate_population()
@@ -64,7 +65,7 @@ class Smooth:
             for p in self.population:
                 x = p['pos'][0]
                 y = p['pos'][1]
-                self.kernel = self.get_kernel(x, y)
+                self.set_kernel(x, y)
                 p['density'] = self.density()
                 self.mutate_all(p)
             fit = self.fitness()
@@ -74,6 +75,4 @@ class Smooth:
             self.migrate()
 
     def get_binary(self):
-        # for i, j in [(0, 0), (0, self.h - 1), (self.w - 1, 0), (self.w - 1, self.h - 1)]:
-        #     self.binary[i, j] = 255
         return self.binary
