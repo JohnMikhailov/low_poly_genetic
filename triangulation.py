@@ -35,7 +35,7 @@ def color(polygon, pixels):
     return fill_color
 
 
-def draw_triangles(inp, image, saved, points_amount=0):
+def draw_triangles(inp, image, saved):
     width, height = image.size
     pixels = saved.load()
     layer = Image.new('RGBA', (width, height))
@@ -54,7 +54,7 @@ def draw_triangles(inp, image, saved, points_amount=0):
     image.show()
 
 
-imp = 'images/paris.jpg'
+imp = 'images/luba.jpg'
 image = Image.open(imp)
 im = cv2.imread(imp)
 
@@ -62,7 +62,7 @@ edges = cv2.Canny(im, 100, 200)
 Image.fromarray(edges).show()
 
 
-s = Smooth(edges, 5000, (0.1, 0.5), fit=0.5, radius=5)
+s = Smooth(edges, 1000, (0.1, 0.5), fit=0.3, radius=4)
 s.start(10)
 r = s.get_binary()
 

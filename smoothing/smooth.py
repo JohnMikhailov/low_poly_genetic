@@ -1,15 +1,14 @@
 import numpy as np
-from random import randint as rnd, sample, choice
-from PIL import Image
+from random import randint as rnd, choice
 import itertools
 
 
 class Smooth:
 
-    def __init__(self, binary, pop_size, threshold=(0.2, 0.5), fit=0.5, radius=2):
+    def __init__(self, binary, size, threshold=(0.2, 0.5), fit=0.5, radius=2):
         self.binary = binary
         self.w, self.h = self.binary.shape
-        self.pop_size = pop_size
+        self.size = size
         self.threshold = threshold
         self.fit = fit
         self.kernel_size = radius
@@ -19,19 +18,19 @@ class Smooth:
     def generate_population(self):
         self.population = [{'pos': [rnd(0, self.w),
                                     rnd(0, self.h)], 'density': 0}
-                           for _ in range(self.pop_size)]
+                           for _ in range(self.size)]
 
-    def density(self):
+    def kernel_density(self):
         values = np.array([self.binary[index] for index in self.kernel if index[0] < self.w and index[1] < self.h])
         white_amount = values[values == 255].size
-        return round(white_amount/9, 2)
+        return round(white_amount/len(self.kernel), 2)
 
     def fitness(self):
         fitted = 0
         for p in self.population:
             x, y = p['pos']
             self.set_kernel(x, y)
-            if self.threshold[0] < self.density() < self.threshold[1]:
+            if self.threshold[0] < self.kernel_density() < self.threshold[1]:
                 fitted += 1
         return round(fitted/len(self.population), 2)
 
@@ -40,7 +39,7 @@ class Smooth:
             if not (self.threshold[0] < point['density'] < self.threshold[1]):
                 point['pos'] = [rnd(0, self.w), rnd(0, self.h)]
 
-    def mutate_all(self, p):
+    def mutate(self, p):
         if p['density'] > self.threshold[1]:
             for i, j in self.kernel:
                 self.binary[i, j] = 0
@@ -66,8 +65,8 @@ class Smooth:
                 x = p['pos'][0]
                 y = p['pos'][1]
                 self.set_kernel(x, y)
-                p['density'] = self.density()
-                self.mutate_all(p)
+                p['density'] = self.kernel_density()
+                self.mutate(p)
             fit = self.fitness()
             print('step:', step, 'fitness:', fit)
             if fit >= self.fit:
