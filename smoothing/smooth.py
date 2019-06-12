@@ -43,7 +43,7 @@ class Smooth:
         if p['density'] > self.threshold[1]:
             for i, j in self.kernel:
                 self.binary[i, j] = 0
-        if p['density'] < self.threshold[0]:
+        if p['density'] <= self.threshold[0]:
             for i, j in [choice(self.kernel)]:
                 self.binary[i, j] = 255
 
@@ -56,9 +56,9 @@ class Smooth:
         ker = itertools.product(_x, _y)
         self.kernel = [(i, j) for i, j in ker if i < self.w and j < self.h]
 
-    def start(self, steps=1):
+    def start(self, steps=1, use_fit=True):
         self.generate_population()
-        if self.fitness() >= self.fit:
+        if use_fit and self.fitness() >= self.fit:
             return
         for step in range(steps):
             for p in self.population:
@@ -69,7 +69,7 @@ class Smooth:
                 self.mutate(p)
             fit = self.fitness()
             print('step:', step, 'fitness:', fit)
-            if fit >= self.fit:
+            if use_fit and fit >= self.fit:
                 return
             self.migrate()
 

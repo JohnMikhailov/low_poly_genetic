@@ -1,4 +1,9 @@
 import math
+import numpy as np
+
+
+def fit(im1, im2):
+    return np.sqrt(np.sum((im1 - im2)**2))
 
 
 def fitness(original, selected):
@@ -19,3 +24,4 @@ def fitness_selected(original, selected, points):
         b = original[points[i][0]][points[i][1]][2] - selected[points[i][0]][points[i][1]][2]
         fit += r*r + b*b + g*g
     return math.sqrt(fit)
+

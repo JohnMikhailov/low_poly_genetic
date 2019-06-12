@@ -35,13 +35,11 @@ def color(polygon, pixels):
     return fill_color
 
 
-def draw_triangles(inp, image, saved):
+def draw_triangles(inp, image, saved, output):
     width, height = image.size
     pixels = saved.load()
     layer = Image.new('RGBA', (width, height))
     layer_draw = ImageDraw.Draw(layer)
-    # key_points = [(0, 0), (0, height), (width, 0), (width, height)]
-    # points = key_points + [(rnd(0, width), rnd(0, height)) for _ in range(points_amount)]
     points = inp
     tri = Delaunay(points)
     for i in tri.simplices:
@@ -51,26 +49,11 @@ def draw_triangles(inp, image, saved):
         fill = color([a, b, c], pixels)
         layer_draw.polygon([a, b, c], fill=fill)
     image.paste(layer, mask=layer)
-    image.show()
+    image.save(output)
 
 
-imp = 'images/luba.jpg'
-image = Image.open(imp)
-im = cv2.imread(imp)
-
-edges = cv2.Canny(im, 100, 200)
-Image.fromarray(edges).show()
-
-
-s = Smooth(edges, 1000, (0.1, 0.5), fit=0.3, radius=4)
-s.start(10)
-r = s.get_binary()
-
-Image.fromarray(r).show()
-
-non_zero_indices = np.where(r > 0)
-points = list(zip(non_zero_indices[1], non_zero_indices[0]))
-
-saved = Image.open(imp)
-draw_triangles(points, image, saved)
-
+im = Image.open('images/tiger.jpg')
+saved = Image.open('images/tiger.jpg')
+w, h = im.size
+points = [(rnd(0, w), rnd(0, h)) for _ in range(5_000)]
+draw_triangles(points, im, saved, 'outputs/tiger_triang.jpg')
