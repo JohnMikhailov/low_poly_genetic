@@ -11,7 +11,7 @@ from settings import settings
 
 from low_poly import low_poly
 
-input_path = 'images/tiger.jpg'
+input_path = 'images/mount.jpg'
 
 processed = low_poly(input_path, settings)
 
