@@ -17,16 +17,14 @@ processed.show()
 
 input1:
 
-![Ryan Gosling](https://github.com/JohnMikhailov/low_poly_genetic/raw/master/images/gosling.jpg)
+![mountains](https://github.com/JohnMikhailov/low_poly_genetic/raw/master/images/mount.jpg)
 
 output1:
 
-![Ryan Gosling low poly](https://github.com/JohnMikhailov/low_poly_genetic/raw/master/outputs/gosling.jpg)
-
-As you can see eyes look pretty weird, because of points density in eyes erea
-
-input2:
-![mountains](https://github.com/JohnMikhailov/low_poly_genetic/raw/master/images/mount.jpg)
-
-output2:
 ![mountains low poly](https://github.com/JohnMikhailov/low_poly_genetic/raw/master/outputs/mount.jpg)
+
+As you can see some areas of image is not covered by polygons.
+It happens because of high density of points in those areas.
+
+As i already said - project is not work as well.
+I made it becasue i wanted to see how genetic algorithm works with images.
