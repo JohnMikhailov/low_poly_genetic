@@ -8,10 +8,13 @@ Also you have to import settings file, where you can add your settings - this is
 # Code example
 
 from settings import settings
+
 from low_poly import low_poly
 
 input_path = 'images/tiger.jpg'
+
 processed = low_poly(input_path, settings)
+
 processed.show()
 
 
