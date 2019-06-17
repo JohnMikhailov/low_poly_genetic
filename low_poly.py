@@ -26,7 +26,8 @@ def color(polygon, pixels):
     return fill_color
 
 
-def low_poly(original, canny, ga):
+def low_poly(original, settings):
+    ga, canny = settings[0], settings[1]
     image = Image.open(original)
     processed = Image.open(original)
     pixels = image.load()
