@@ -23,7 +23,7 @@ output1:
 
 ![mountains low poly](https://github.com/JohnMikhailov/low_poly_genetic/raw/master/outputs/mount.jpg)
 
-As you can see some areas of image is not covered by polygons: there is just more points than in other places on image.
+As you can see some areas of output image is not covered by polygons: there is just more points than in other places on image.
 You cannot see expicit polygons because of high density of points in those areas and in those areas appears a lot of small polygons - this leads to maximum approximation to original image at those areas.
 
 As i already said - project is not work as well.
