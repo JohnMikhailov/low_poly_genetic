@@ -24,7 +24,7 @@ output1:
 ![mountains low poly](https://github.com/JohnMikhailov/low_poly_genetic/raw/master/outputs/mount.jpg)
 
 As you can see some areas of image is not covered by polygons.
-It happens because of high density of points in those areas.
+It happens because of high density of points in those areas and in those areas appears a lot of polygons - this leads to maximum approximation to original image.
 
 As i already said - project is not work as well.
 I made it becasue i wanted to see how genetic algorithm works with images.
