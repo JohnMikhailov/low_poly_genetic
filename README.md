@@ -12,4 +12,4 @@ input_path = 'images/tiger.jpg'
 processed = low_poly(input_path, settings)
 processed.show()
 
-![Image alt](https://github.com/{JohnMikhailov}/{low_poly_genetic}/raw/{master}/{outputs}/gosling.jpg)
+![Image alt](https://github.com/JohnMikhailov/low_poly_genetic/raw/master/outputs/gosling.jpg)
