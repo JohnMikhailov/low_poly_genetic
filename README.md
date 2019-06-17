@@ -1,3 +1,5 @@
+# Short description
+
 This algorithm creates new image with low-poly design.
 For now it's not work so well, but you can use it just for fun.
 To run algorithm, create empty python-file and use function low_poly() from low_poly package.
